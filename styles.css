@@ -1,0 +1,108 @@
+﻿@import url(https://fonts.googleapis.com/css?family=Lora);
+body {margin: 0 auto 0px;}
+h1 {
+  font-family: Arial;
+  font-size: x-large;
+  line-height: 10%;
+  color: #aa6868;
+}
+h2 {
+  font-family: monospace;
+  color: #494242;
+}
+ul {  
+  list-style: none; 
+  margin: 0 auto;
+  /*text-align: center;*/
+}
+/*a {
+  text-decoration: none;
+  font-family: 'Lora', serif;
+  transition: .5s linear;
+}*/
+i {
+  margin-right: 0px;
+}
+nav {
+  justify-content: center;
+  /*display: block;*/
+  display: flex;
+  /*width: 900px;*/
+  margin: 0 auto 0px;
+  flex: 0 0 auto;
+}
+footer {
+  /*position: fixed; /* Фиксированное положение */
+  position: absolute;
+  left: 0; 
+  bottom: 0; /* Левый нижний угол */
+  /*padding: 10px; /* Поля вокруг текста */
+  width: 100%;
+  height: 80px;
+  text-align: center;
+}
+.headr {
+  text-align: center; /*set header image on the center of page*/
+  position: relative;
+  color: #0e0d0d;
+}
+.headr1 {
+  text-align: center; /*set e-mail on the center of page*/
+  position: relative;
+  color: #0e0000;
+  font-size: xx-large;
+}
+/* Centered text */
+.centered {
+  position: absolute;
+  top: 10%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+}
+.bukvitsa {
+  /*display: -webkit-flex;*/
+  /*display: flex;*/
+  position: relative;
+  text-align: center;
+  flex: 0 0 auto;
+  
+}
+
+.textovka {
+  position: relative;
+  text-align: center;
+  flex: 0 0 auto;
+}
+
+.menu ul { /*color of background of menu*/
+  position: relative;
+  display: -webkit-flex;
+  display: flex;
+  background: #FFD7A7;
+  padding-left: 0; /*убираем левый отступ, равный 40px*/
+  list-style: none; /*убираем маркеры списка*/
+  margin: 0; /*убираем верхнее и нижнее поле, равное 1em*/
+  /*width: 100%;*/
+  text-align: center;
+}
+.menu a {
+  padding: 1em;
+  display: -webkit-flex;
+  display: flex;
+  /*display: block; /*block*/
+  color: #9B4222; /*color of menu elements text*/
+  border-right: 1px solid #FFAB51; /*color of right border for every menu elements*/
+  background: rgba(255, 171, 81, .3);
+  text-decoration: none; /*убираем подчеркивание текста ссылок*/
+  /*width: 100%;*/
+}
+.menu a:hover {
+  position: relative;
+  display: -webkit-flex;
+  display: flex;
+  background: #FFAB51; /*color of menu element under the mouse cursor*/
+  /*display: block;
+  /*width: 100%;*/
+} 
+

@@ -1,0 +1,111 @@
+html, body {
+  margin: 0 auto 0px;
+  /*padding: 0;*/
+}
+
+/*canvas {
+  display: block;
+} */
+
+.grid {
+  display:flex;
+  /*grid-template-columns: 600px 200px;*/
+  margin:0 auto;
+  /*width:600px;*/
+  height:600px;
+  /*float: left;*/
+  width: 53%;
+  margin-right: -100px;    
+}
+
+.headr {
+  text-align: center; /*set header image on the center of page*/
+  position: relative;
+  color: #0e0d0d;
+}
+
+.centered {
+  position: absolute;
+  top: 10%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+}
+
+.right-column {
+  /*display:flex;*/
+  /*flex-direction: column;*/
+  /*justify-content: space-between;*/
+  width: 600px;
+  float: left;
+  font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+  font-size: larger;
+  font-weight: bold;
+  
+}
+
+b { /*styles CSS for Taken (15) page*/
+  font-family: Georgia, 'Times New Roman', Times, serif;
+  font-size: large;
+  color: rgb(95, 95, 100);
+}
+
+.btn-group button {
+  background-color: #4CAF50; /* Green background */
+  border: 1px solid green; /* Green border */
+  color: white; /* White text */
+  padding: 10px 24px; /* Some padding */
+  cursor: pointer; /* Pointer/hand icon */
+  float: left; /* Float the buttons side by side */
+}
+
+.btn-group button:not(:last-child) {
+  border-right: none; /* Prevent double borders */
+}
+
+.btn-group:after {  /* Clear floats (clearfix hack) */
+  content: "";
+  clear: both;
+  display: table /*display: table;*/
+}
+
+.btn-group button:hover {   /* Add a background color on hover */
+  background-color: #3e8e41;
+}
+
+footer {
+  position: fixed; /* Фиксированное положение */
+  left: 0; bottom: 0; /* Левый нижний угол */
+  padding: 10px; /* Поля вокруг текста */
+}
+
+button {  
+  /*margin: 0 auto;*/ /*neutral vertical position around strings on the page*/
+  /*top: 500px;*/ /* Расстояние от верхнего края */
+  /*height: 80px;*/ /* Высота слоя */
+  /*display: block;*/ /*center position around page width*/
+  /*font-size: 16px;
+  background-color: LightSteelBlue;*/
+
+  background-color: #4CAF50; /* Green background */
+  border: 1px solid green; /* Green border */
+  color: white; /* White text */
+  padding: 10px 24px; /* Some padding */
+  cursor: pointer; /* Pointer/hand icon */
+}
+
+button:hover {   /* Add a background color on hover */
+  background-color: #3e8e41;
+}
+
+h1 {
+  font-family: Arial;
+  font-size: x-large;
+  line-height: 10%;
+  color: #817575;
+}
+
+h2 {
+  font-family: monospace;
+  color: #494242;
+}

@@ -1,6 +1,6 @@
 ////******Experiments with classes *////////Tic-tacto game///////
 ////******Built by Yudenko Michael, desember 2021 *////////
-////******Dinished 12.12.2021 */
+////******Dinished 12.12.2021 */ Update 13/09/2022 - added score counters of X and O winners
 let rectUpLeftXY = [10, 205, 400]; //array of coordinates of Left Right corner of Buttons (din't use yet)
 let rectCentertY = [10, 205, 400]; //array of coordinates of Centres of Buttons (didn't use yet)
 let colrs = ['Silver', 'Gray', 'LightSteelBlue', 'DarkSlateGray', 'DarkOliveGreen', 'pink', 'red']; 
@@ -15,7 +15,49 @@ let colrs = ['Silver', 'Gray', 'LightSteelBlue', 'DarkSlateGray', 'DarkOliveGree
 let coordMsX = 0;
 let coordMsY = 0;
 let counter = 0; //variable for counting of clicks above Buttons
+let sumX = 0, sumO = 0; //variable for quontity of X and O steps
+let winsO = 0, winsX = 0; //variable for quontity of X and O WINs 
+let finale = false; //checker for trigging wins action
 let ppBut = {};  // variable for bigButton(i) names remembering, for automatization drawing
+let gameValues = { //object for indicate quontity of X or O wins
+    winsX: 0,
+    winsO: 0,
+}
+let canvasBeginPosX = 100; //(windowWidth-595) / 2;
+let canvasBeginPosY = 180;
+
+function updateAccount(key, value) {            // Rewrite values on the screen
+    let element = document.getElementById(key); 
+    if (element) {
+        //console.log('It is updateAccaunt function!');
+        element.textContent = value; //
+    }
+}
+let account = new Proxy(gameValues, {           // Proxing access to the gameValues keys
+    set: function (target, key, value) {
+        //console.log('It is proxy is working');
+        target[key] = value;
+        updateAccount(key, value);
+        return true;
+    }
+});
+function winsCount() {    
+    if (!finale) {
+        if (counter == 9 && sumO == sumX) {
+            finale = true;
+            winsO = winsO + 1;
+            console.log('O win!!!');
+        }
+        if (counter == 9 && sumO < sumX) {
+            finale = true;
+            winsX = winsX + 1;
+            console.log('X win!!!');
+        }        
+        console.log('sumO=', sumO, 'sumX=', sumX, 'winsO=', winsO, 'winsX=', winsX, 'finale=', finale);
+        account.winsO = winsO;
+        account.winsX = winsX;
+    }
+}
 
 class BigButton { //the main class of Buttons with all complex of events and 
     constructor(pUpLeftX, pUpLeftY, pCenterX, pCenterY, filler, bordColr, mouseMov, mouseDowned, XO) {
@@ -151,10 +193,29 @@ function findMsMoving(coordMsX, coordMsY) { //Recognize mouse moving above the B
          
 }
 
+function centerCanvas() { // 27.11.2022 - I try correct centered the canvas
+    var x = (windowWidth - width) / 2;
+    var y = (windowHeight - height) / 2;
+    cnv.position(x, y);
+  }
 
 function setup() { ////////////////////////////////////////////////////////////////////
-    createCanvas(595, 595);
-    //console.log(rectUpLeftX[2]);
+    let cnv = createCanvas(595, 595);
+    //cnv.position(0, 50);
+    //cnv.style('display', 'block');
+    //cnv.position((windowWidth)/2, (windowHeight-595)/2); // placed canvas on the center of window
+    canvasBeginPosX = (windowWidth - 595) / 2;
+    canvasBeginPosY = 180;
+    cnv.position(canvasBeginPosX, canvasBeginPosY); // static, fixed, relative, sticky, initial or inherit (optional)
+    //canvas.parent('grid');
+    //centerCanvas();
+    //console.log(cnv);
+    //console.log(rectUpLeftX[2]);  
+
+    /*function windowResized() {
+        centerCanvas();
+      }
+    windowResized()*/
 
     function clearField() {                     //clearing the field with Buttons
         console.log('clearing the field');
@@ -177,6 +238,9 @@ function setup() { /////////////////////////////////////////////////////////////
         bigButton9.mouseDowned = false;
         bigButton9.XO = 0;
         counter = 0;
+        finale = false;
+        sumO = 0;
+        sumX = 0;
     }
 
     function mousClick() {
@@ -186,13 +250,15 @@ function setup() { /////////////////////////////////////////////////////////////
             ppBut.mouseDowned = true;
             if (counter%2 == 0) {
                 ppBut.XO = 2;
+                sumO = sumO + 1;
             }
             if (counter%2 != 0) {
                 ppBut.XO = 1;
+                sumX = sumX + 1;
             }
             //ppBut.filler = colrs[1];
             //console.log('counter = ' + counter);
-            console.log(ppBut.filler + ' ' + ppBut.mouseDowned);
+            //console.log(ppBut.filler + ' ' + ppBut.mouseDowned);
         } else {
             clearField();
         }
@@ -245,13 +311,14 @@ function setup() { /////////////////////////////////////////////////////////////
             console.log('you pressed button 9');
         }
       });
-
-      
-
 }
 
 function draw() { /////////////////////////////////////////////////////////////////////
     background(colrs[1]);
+
+    //canvasBeginPosX = (window - 595) / 2;
+    //canvasBeginPosY = (window - 595) / 2;
+    //cnv.position(canvasBeginPosX, canvasBeginPosY);
 
     bigButton1.bBuilder();
     bigButton2.bBuilder();
@@ -266,15 +333,13 @@ function draw() { //////////////////////////////////////////////////////////////
     function tratata() {
         if (ppBut.mouseDowned) {ppBut.filler = colrs[1];}
         //console.log("tratata " + ppBut);
-        console.log('tratata ' + counter);
-    }
+        //console.log('tratata ' + counter);
+    }    
 
-    function WinLines() {
-        //console.log('winLine ' + counter);
-        
-            if ((bigButton1.XO > 0) && (bigButton2.XO > 0) && (bigButton3.XO > 0)) {
+    function WinLines() { //function for to build the red win line and triggering wins quontity
+            if ((bigButton1.XO > 0) && (bigButton2.XO > 0) && (bigButton3.XO > 0)) { ///1-2-3
                 if ((bigButton1.XO == bigButton2.XO) && (bigButton2.XO == bigButton3.XO)) {
-                    console.log('winLine1-3 ' + counter);
+                    //console.log('winLine1-3 ' + counter);
                     stroke(colrs[6]);
                     strokeWeight(10);
                     line(bigButton1.pCenterX-25, bigButton1.pCenterY, bigButton3.pCenterX+25, bigButton3.pCenterY);
@@ -282,12 +347,13 @@ function draw() { //////////////////////////////////////////////////////////////
                     bigButton2.filler = colrs[5];
                     bigButton3.filler = colrs[5];
                     counter = 9;
+                    winsCount();
                 }
-                strokeWeight(1);                
+                strokeWeight(1);   
             }            
-            if ((bigButton4.XO > 0) && (bigButton5.XO > 0) && (bigButton6.XO > 0)) {
+            if ((bigButton4.XO > 0) && (bigButton5.XO > 0) && (bigButton6.XO > 0)) { //4-5-6
                 if ((bigButton4.XO == bigButton5.XO) && (bigButton5.XO == bigButton6.XO)) {
-                    console.log('winLine4-6 ' + counter);
+                    //console.log('winLine4-6 ' + counter);
                     stroke(colrs[6]);
                     strokeWeight(10);
                     line(bigButton4.pCenterX-25, bigButton4.pCenterY, bigButton6.pCenterX+25, bigButton6.pCenterY);
@@ -295,12 +361,13 @@ function draw() { //////////////////////////////////////////////////////////////
                     bigButton5.filler = colrs[5];
                     bigButton6.filler = colrs[5];
                     counter = 9;
+                    winsCount();
                 }
                 strokeWeight(1);
             }
-            if ((bigButton7.XO > 0) && (bigButton8.XO > 0) && (bigButton9.XO > 0)) {
+            if ((bigButton7.XO > 0) && (bigButton8.XO > 0) && (bigButton9.XO > 0)) { //7-8-9
                 if ((bigButton7.XO == bigButton8.XO) && (bigButton8.XO == bigButton9.XO)) {
-                    console.log('winLine7-9 ' + counter);
+                    //console.log('winLine7-9 ' + counter);
                     stroke(colrs[6]);
                     strokeWeight(10);
                     line(bigButton7.pCenterX-25, bigButton7.pCenterY, bigButton9.pCenterX+25, bigButton9.pCenterY);
@@ -308,12 +375,13 @@ function draw() { //////////////////////////////////////////////////////////////
                     bigButton8.filler = colrs[5];
                     bigButton9.filler = colrs[5];
                     counter = 9;
+                    winsCount();
                 }
-                strokeWeight(1);                
+                strokeWeight(1);     
             }     
-            if ((bigButton1.XO > 0) && (bigButton4.XO > 0) && (bigButton7.XO > 0)) {
+            if ((bigButton1.XO > 0) && (bigButton4.XO > 0) && (bigButton7.XO > 0)) { //1-4-7
                 if ((bigButton1.XO == bigButton4.XO) && (bigButton4.XO == bigButton7.XO)) {
-                    console.log('winLine1-7 ' + counter);
+                    //console.log('winLine1-7 ' + counter);
                     stroke(colrs[6]);
                     strokeWeight(10);
                     line(bigButton1.pCenterX, bigButton1.pCenterY-25, bigButton7.pCenterX, bigButton7.pCenterY+25);
@@ -321,12 +389,13 @@ function draw() { //////////////////////////////////////////////////////////////
                     bigButton4.filler = colrs[5];
                     bigButton7.filler = colrs[5];
                     counter = 9;
+                    winsCount();
                 }
-                strokeWeight(1);                
+                strokeWeight(1);     
             } 
-            if ((bigButton2.XO > 0) && (bigButton5.XO > 0) && (bigButton8.XO > 0)) {
+            if ((bigButton2.XO > 0) && (bigButton5.XO > 0) && (bigButton8.XO > 0)) { //2-5-8
                 if ((bigButton2.XO == bigButton5.XO) && (bigButton5.XO == bigButton8.XO)) {
-                    console.log('winLine2-8 ' + counter);
+                    //console.log('winLine2-8 ' + counter);
                     stroke(colrs[6]);
                     strokeWeight(10);
                     line(bigButton2.pCenterX, bigButton2.pCenterY-25, bigButton8.pCenterX, bigButton8.pCenterY+25);
@@ -334,12 +403,13 @@ function draw() { //////////////////////////////////////////////////////////////
                     bigButton5.filler = colrs[5];
                     bigButton8.filler = colrs[5];
                     counter = 9;
+                    winsCount();
                 }
-                strokeWeight(1);                
+                strokeWeight(1);     
             } 
-            if ((bigButton3.XO > 0) && (bigButton6.XO > 0) && (bigButton9.XO > 0)) {
+            if ((bigButton3.XO > 0) && (bigButton6.XO > 0) && (bigButton9.XO > 0)) { //3-6-9
                 if ((bigButton3.XO == bigButton6.XO) && (bigButton6.XO == bigButton9.XO)) {
-                    console.log('winLine3-9 ' + counter);
+                    //console.log('winLine3-9 ' + counter);
                     stroke(colrs[6]);
                     strokeWeight(10);
                     line(bigButton3.pCenterX, bigButton3.pCenterY-25, bigButton9.pCenterX, bigButton9.pCenterY+25);
@@ -347,12 +417,13 @@ function draw() { //////////////////////////////////////////////////////////////
                     bigButton6.filler = colrs[5];
                     bigButton9.filler = colrs[5];
                     counter = 9;
+                    winsCount();
                 }
-                strokeWeight(1);                
+                strokeWeight(1);   
             } 
-            if ((bigButton1.XO > 0) && (bigButton5.XO > 0) && (bigButton9.XO > 0)) {
+            if ((bigButton1.XO > 0) && (bigButton5.XO > 0) && (bigButton9.XO > 0)) { //1-5-9
                 if ((bigButton1.XO == bigButton5.XO) && (bigButton5.XO == bigButton9.XO)) {
-                    console.log('winLine1-9 diag ' + counter);
+                    //console.log('winLine1-9 diag ' + counter);
                     stroke(colrs[6]);
                     strokeWeight(10);
                     line(bigButton1.pCenterX-25, bigButton1.pCenterY-25, bigButton9.pCenterX+25, bigButton9.pCenterY+25);
@@ -360,12 +431,13 @@ function draw() { //////////////////////////////////////////////////////////////
                     bigButton5.filler = colrs[5];
                     bigButton9.filler = colrs[5];
                     counter = 9;
+                    winsCount();
                 }
-                strokeWeight(1);                
+                strokeWeight(1);  
             } 
-            if ((bigButton3.XO > 0) && (bigButton5.XO > 0) && (bigButton7.XO > 0)) {
+            if ((bigButton3.XO > 0) && (bigButton5.XO > 0) && (bigButton7.XO > 0)) { //3-5-7
                 if ((bigButton3.XO == bigButton5.XO) && (bigButton5.XO == bigButton7.XO)) {
-                    console.log('winLine3-7 diag ' + counter);
+                    //console.log('winLine3-7 diag ' + counter);
                     stroke(colrs[6]);
                     strokeWeight(10);
                     line(bigButton3.pCenterX+25, bigButton3.pCenterY-25, bigButton7.pCenterX-25, bigButton7.pCenterY+25);
@@ -373,20 +445,11 @@ function draw() { //////////////////////////////////////////////////////////////
                     bigButton5.filler = colrs[5];
                     bigButton7.filler = colrs[5];
                     counter = 9;
+                    winsCount();
                 }
-                strokeWeight(1);                
-            }             
+                strokeWeight(1);                  
+            }     
     }
-
-    /* bigButton1.bBuilder();
-    bigButton2.bBuilder();
-    bigButton3.bBuilder();
-    bigButton4.bBuilder();
-    bigButton5.bBuilder();
-    bigButton6.bBuilder();
-    bigButton7.bBuilder();
-    bigButton8.bBuilder();
-    bigButton9.bBuilder(); */
 
     if (MouseEvent) {
         coordMsX = mouseX;
@@ -394,16 +457,11 @@ function draw() { //////////////////////////////////////////////////////////////
         findMsMoving(coordMsX, coordMsY);
         //if (MouseEvent = MouseClicked) {
             //console.log('mouse-click!!!');
-        }
+    }
 
     tratata();
 
     if ((counter => 5) && (counter <= 9) && (counter !=0)) {
         WinLines();
-    }
-    
-    
-
-    
-
+    } 
 }
